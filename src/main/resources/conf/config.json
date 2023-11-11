@@ -1,0 +1,5 @@
+{
+  "APP_NAME": "vertx-kafka-streams",
+  "SERVING_PORT": 8080,
+  "KAFKA_BROKER": "localhost:9092"
+}

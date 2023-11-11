@@ -1,0 +1,48 @@
+{
+  "$id": "https://www.hs.org/schemas/transaction.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Transaction",
+  "type": "object",
+  "properties": {
+    "transactionUuid": {
+      "type": "string",
+      "format": "uuid",
+      "description": "The unique identifier of the transaction."
+    },
+    "fromAccountId": {
+      "type": "integer",
+      "description": "Account ID of transaction initiator."
+    },
+    "toAccountId": {
+      "type": "integer",
+      "description": "Account ID of transaction receiver."
+    },
+    "amount": {
+      "type": "number",
+      "description": "Amount of the transaction."
+    },
+    "currency": {
+      "type": "string",
+      "enum": [
+        "EUR",
+        "USD",
+        "GBP"
+      ],
+      "description": "Currency of the transaction."
+    },
+    "transactionTimestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The timestamp of the transaction."
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "transactionUuid",
+    "fromAccountId",
+    "toAccountId",
+    "amount",
+    "currency",
+    "transactionTimestamp"
+  ]
+}
