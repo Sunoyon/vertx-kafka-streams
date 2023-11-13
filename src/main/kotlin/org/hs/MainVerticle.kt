@@ -6,6 +6,7 @@ import io.vertx.kotlin.coroutines.CoroutineVerticle
 import org.hs.config.AppConfig
 import org.hs.config.AppConfigRetriever
 import org.hs.verticles.TransactionConverterTopologyVerticle
+import org.hs.verticles.TransactionCountTopologyVerticle
 
 class MainVerticle : CoroutineVerticle() {
 
@@ -46,6 +47,13 @@ class MainVerticle : CoroutineVerticle() {
   }
 
   fun deployVerticles(vertx: Vertx, config: AppConfig): List<Future<String>> {
-    return listOf(vertx.deployVerticle(TransactionConverterTopologyVerticle(config.kafkaBroker)))
+    return listOf(
+      vertx.deployVerticle(
+        TransactionConverterTopologyVerticle(config.kafkaBroker, "currency-conversion")
+      ),
+      vertx.deployVerticle(
+        TransactionCountTopologyVerticle(config.kafkaBroker, "transaction-count")
+      )
+    )
   }
 }

@@ -1,0 +1,28 @@
+{
+  "$id": "https://www.hs.org/schemas/transaction.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TransactionCount",
+  "type": "object",
+  "properties": {
+    "fromTransactionTimestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The start transaction timestamp of the window."
+    },
+    "toTransactionTimestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The end transaction timestamp of the window."
+    },
+    "transactionCount": {
+      "type": "integer",
+      "description": "The count of the transaction during the window."
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "fromTransactionTimestamp",
+    "toTransactionTimestamp",
+    "transactionCount"
+  ]
+}

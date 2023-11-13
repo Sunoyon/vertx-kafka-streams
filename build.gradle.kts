@@ -102,18 +102,3 @@ jsonSchema2Pojo {
     }
   }
 }
-
-//jsonSchema2Pojo {
-//  targetVersion.set(JavaVersion.VERSION_11.toString())
-//  source.setFrom(files("$schemaRootPath"))
-//  sourceType.set("jsonschema")
-//  targetPackage.set(targetPackage)
-//  serializable.set(true)
-//  includeConstructors.set(true)
-//  dateTimeType.set("java.time.OffsetDateTime")
-//  removeOldOutput.set(true)
-//  initializeCollections.set(true)
-//  inclusionLevel.set("USE_DEFAULTS")
-//  useTitleAsClassname.set(true)
-//  useLongIntegers.set(true)
-//}

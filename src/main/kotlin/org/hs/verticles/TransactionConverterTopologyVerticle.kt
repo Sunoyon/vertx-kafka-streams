@@ -11,17 +11,15 @@ import org.apache.kafka.streams.kstream.Consumed
 import org.apache.kafka.streams.kstream.Produced
 import org.hs.models.Transaction
 import org.hs.serde.JsonSerde
+import org.hs.utils.Constants
 import java.util.*
 
 class TransactionConverterTopologyVerticle (
   private val kafkaBroker: String,
+  private val verticleName: String
 ) : CoroutineVerticle() {
 
   companion object {
-    const val ALL_CURRENCIES_TRANSACTION_TOPIC = "transaction.all_currencies"
-    const val USD_TRANSACTION_TOPIC = "transaction.usd"
-    const val CONSUMER_GROUP = "transaction-converter"
-
     val usdConversionRate = mapOf(
       Transaction.Currency.USD to 1.0, // USD to USD
       Transaction.Currency.EUR to 1.2, // EUR to USD
@@ -39,10 +37,10 @@ class TransactionConverterTopologyVerticle (
     val transactionJsonSerde = JsonSerde(Transaction::class.java)
 
     streamsBuilder
-      .stream(ALL_CURRENCIES_TRANSACTION_TOPIC, Consumed.with(Serdes.String(), transactionJsonSerde))
+      .stream(Constants.TOPIC_TRANSACTION_ALL_CURRENCIES, Consumed.with(Serdes.String(), transactionJsonSerde))
       .filter{ _, value -> value.currency in usdConversionRate.keys && value.amount > 0}
       .mapValues { _, value -> convertToUsd(value) }
-      .to(USD_TRANSACTION_TOPIC, Produced.with(Serdes.String(), transactionJsonSerde))
+      .to(Constants.TOPIC_TRANSACTION_USD, Produced.with(Serdes.String(), transactionJsonSerde))
 
     return streamsBuilder.build()
   }
@@ -58,7 +56,7 @@ class TransactionConverterTopologyVerticle (
 
   override suspend fun start() {
     val kafkaStreamConfig: Properties = Properties().apply {
-      put(StreamsConfig.APPLICATION_ID_CONFIG, CONSUMER_GROUP)
+      put(StreamsConfig.APPLICATION_ID_CONFIG, Constants.TRANSACTION_CONVERTER_TOPOLOGY_CONSUMER_GROUP)
       put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaBroker)
       put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest")
 //      put("commit.interval.ms", 0)
@@ -67,7 +65,7 @@ class TransactionConverterTopologyVerticle (
     val topology = topology()
     val kafkaStreams = KafkaStreams(topology, kafkaStreamConfig)
     kafkaStreams.start().also {
-      println("Started currency-conversion topology ... ")
+      println("Started $verticleName topology ... ")
     }
 
     Runtime.getRuntime().addShutdownHook(Thread { kafkaStreams.close() })
