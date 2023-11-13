@@ -8,10 +8,11 @@ import org.apache.kafka.streams.kstream.*
 import org.apache.kafka.streams.kstream.Consumed
 import org.hs.extractor.TransactionTimeExtractor
 import org.hs.models.Transaction
+import org.hs.models.TransactionCount
 import org.hs.serde.JsonSerde
 import org.hs.utils.Constants
 import org.hs.utils.Utils
-import java.time.Duration
+import java.time.*
 import java.util.*
 
 class TransactionCountTopologyVerticle(
@@ -34,12 +35,15 @@ class TransactionCountTopologyVerticle(
     aggregates
       .toStream()
       .peek{ k, v -> println("k: $k, v:xz $v") }
-//      .map { ws, i -> KeyValue("${ws.window().start()}", "$i") }
       .map { ws, i -> KeyValue(
         "${Utils.convertEpochMillisToString(ws.window().start())}_${Utils.convertEpochMillisToString(ws.window().end())}",
-        "$i")
+        TransactionCount(
+          OffsetDateTime.ofInstant(Instant.ofEpochMilli(ws.window().start()), ZoneOffset.UTC),
+          OffsetDateTime.ofInstant(Instant.ofEpochMilli(ws.window().end()), ZoneOffset.UTC),
+          i)
+        )
       }
-      .to(Constants.TOPIC_TRANSACTION_COUNT, Produced.with(Serdes.String(), Serdes.String()))
+      .to(Constants.TOPIC_TRANSACTION_COUNT, Produced.with(Serdes.String(), JsonSerde(TransactionCount::class.java)))
     return streamsBuilder.build()
   }
 
