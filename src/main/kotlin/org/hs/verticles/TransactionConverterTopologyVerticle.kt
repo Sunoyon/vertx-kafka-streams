@@ -38,7 +38,7 @@ class TransactionConverterTopologyVerticle (
 
     streamsBuilder
       .stream(Constants.TOPIC_TRANSACTION_ALL_CURRENCIES, Consumed.with(Serdes.String(), transactionJsonSerde))
-      .filter{ _, value -> value.currency in usdConversionRate.keys && value.amount > 0}
+      .filter{ _, value -> value.currency in usdConversionRate.keys && value.amount >= 0}
       .mapValues { _, value -> convertToUsd(value) }
       .to(Constants.TOPIC_TRANSACTION_USD, Produced.with(Serdes.String(), transactionJsonSerde))
 

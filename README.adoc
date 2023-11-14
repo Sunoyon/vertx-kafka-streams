@@ -3,23 +3,48 @@
 image:https://img.shields.io/badge/vert.x-4.4.6-purple.svg[link="https://vertx.io"]
 image:https://img.shields.io/badge/kafka-streams:3.6.0-purple.svg[link="https://kafka.apache.org/documentation/streams/"]
 
+== Introduction
+This is a simple example of using Kafka Streams with Vert.x.
+There are two topologies defined here.
+
+1. A stateless topology that simply reads from a topic, process and writes to another topic.
+2. A stateful topology that reads from a topic, does some windowing and then writes to another topic. It can handle delayed events coming to the topic.
+
 == Building
 
-To launch your tests:
+To launch the tests:
 ```
 ./gradlew clean test
 ```
 
-To package your application:
+To package the application:
 ```
 ./gradlew clean assemble
 ```
 
-To run your application:
+To run the application:
 ```
 ./gradlew clean run
 ```
 
+To build the application
+```
+./gradlew clean build
+```
+
 == Stateless Topology
+
+The stateless topology is defined in `TransactionConverterTopologyVerticle.kt` and it is very simple. It reads from a topic, does some processing and writes to another topic.
+
+  streamsBuilder
+    // Read from the topic and deserialize the event
+    .stream(Constants.TOPIC_TRANSACTION_ALL_CURRENCIES, Consumed.with(Serdes.String(), transactionJsonSerde))
+    // Filter out the events that are not in the configuration
+    // and filter out the events that have negative amount
+    .filter{ _, value -> value.currency in usdConversionRate.keys && value.amount > 0}
+    // Convert the amount to USD
+    .mapValues { _, value -> convertToUsd(value) }
+    // Write to the topic
+    .to(Constants.TOPIC_TRANSACTION_USD, Produced.with(Serdes.String(), transactionJsonSerde))
 
 == Windowing with Delayed Messages
