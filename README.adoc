@@ -155,7 +155,7 @@ Scenario II: all of them are wrong
 
 This will generate proper result. However we need build another stack (new topic, new consumer) to handle the late events.
 
-→ Use Windowed KTable: correlate the late event with the right aggregation window.
+→ *Use Windowed KTable*: correlate the late event with the right aggregation window.
 
 === Streaming aggregation and handle late events
 
