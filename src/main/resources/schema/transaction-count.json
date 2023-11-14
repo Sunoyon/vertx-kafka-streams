@@ -17,12 +17,18 @@
     "transactionCount": {
       "type": "integer",
       "description": "The count of the transaction during the window."
+    },
+    "lastUpdatedTimestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The last updated timestamp of the processing of the window."
     }
   },
   "additionalProperties": false,
   "required": [
     "fromTransactionTimestamp",
     "toTransactionTimestamp",
-    "transactionCount"
+    "transactionCount",
+    "lastUpdatedTimestamp"
   ]
 }

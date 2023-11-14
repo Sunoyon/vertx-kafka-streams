@@ -40,7 +40,9 @@ class TransactionCountTopologyVerticle(
         TransactionCount(
           OffsetDateTime.ofInstant(Instant.ofEpochMilli(ws.window().start()), ZoneOffset.UTC),
           OffsetDateTime.ofInstant(Instant.ofEpochMilli(ws.window().end()), ZoneOffset.UTC),
-          i)
+          i,
+          OffsetDateTime.now(ZoneOffset.UTC)
+          )
         )
       }
       .to(Constants.TOPIC_TRANSACTION_COUNT, Produced.with(Serdes.String(), JsonSerde(TransactionCount::class.java)))
