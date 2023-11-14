@@ -7,10 +7,11 @@ plugins {
   application
   id("com.github.johnrengelman.shadow") version "7.1.2"
   id("org.jsonschema2dataclass") version "6.0.0"
+  java
 }
 
 group = "org.hs"
-version = "1.0.0-SNAPSHOT"
+version = "1.0.0"
 
 repositories {
   mavenCentral()
@@ -32,6 +33,12 @@ application {
   mainClass.set(launcherClassName)
 }
 
+java {
+  toolchain {
+    languageVersion.set(JavaLanguageVersion.of(17))
+  }
+}
+
 dependencies {
   implementation(platform("io.vertx:vertx-stack-depchain:$vertxVersion"))
   implementation("io.vertx:vertx-config")
@@ -48,7 +55,7 @@ dependencies {
 }
 
 val compileKotlin: KotlinCompile by tasks
-compileKotlin.kotlinOptions.jvmTarget = "11"
+compileKotlin.kotlinOptions.jvmTarget = "17"
 
 tasks.withType<ShadowJar> {
   archiveClassifier.set("fat")
@@ -75,7 +82,7 @@ jsonSchema2Pojo {
       io {
         source.setFrom(files(schemaDirectory))
         sourceType.set("jsonschema")
-        targetJavaVersion.set(JavaVersion.VERSION_11.toString())
+        targetJavaVersion.set(JavaVersion.VERSION_17.toString())
       }
 
       klass {
