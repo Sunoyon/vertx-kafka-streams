@@ -50,6 +50,8 @@ dependencies {
   implementation("com.fasterxml.jackson.core:jackson-databind:2.15.3")
   implementation("org.apache.kafka:kafka-streams:3.6.0")
   compileOnly("org.projectlombok:lombok:1.18.30")
+  implementation("org.slf4j:slf4j-api:2.0.5")
+  implementation("ch.qos.logback:logback-classic:1.4.7")
   testImplementation("io.vertx:vertx-junit5")
   testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
 }

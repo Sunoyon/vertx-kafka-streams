@@ -54,6 +54,7 @@ class TransactionCountTopologyVerticle(
       put(StreamsConfig.APPLICATION_ID_CONFIG, Constants.TRANSACTION_COUNT_TOPOLOGY_CONSUMER_GROUP)
       put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaBroker)
       put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest")
+      // put(StreamsConfig.REPLICATION_FACTOR_CONFIG, 2)
       put("commit.interval.ms", 0)
     }
 
